@@ -1,6 +1,6 @@
 module.exports = {
   HOST: process.env.HOST,
-  USER: "root",
+  USER: process.env.USER,
   PASSWORD: process.env.DB_PASSWORD,
-  DB: "portfolio",
+  DB: process.env.DB,
 };
