@@ -1,15 +1,30 @@
+const dbPool = require("../models/pool");
 const Project = require("../models/project.model");
 
 exports.findAll = (req, res) => {
-  Project.getAll((err, data) => {
-    if (err)
+  // Utilisez le pool de connexions pour obtenir une connexion
+  dbPool.getConnection((err, connection) => {
+    if (err) {
+      console.error("Erreur de connexion à la base de données :", err);
       res.status(500).send({
-        message: err.message || "Some error occured while retrieving project.",
+        message: err.message || "Erreur lors de la récupération des projets.",
       });
-    else res.send(data);
+      return;
+    }
+
+    // Utilisez la connexion pour exécuter votre requête
+    Project.getAll(connection, (error, data) => {
+      // Libérez la connexion après utilisation
+      connection.release();
+
+      if (error) {
+        res.status(500).send({
+          message:
+            error.message || "Erreur lors de la récupération des projets.",
+        });
+      } else {
+        res.send(data);
+      }
+    });
   });
 };
-
-// exports.getAllProjects = (req, res) => {
-
-// }

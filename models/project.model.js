@@ -1,5 +1,3 @@
-const sql = require("./db");
-
 class Project {
   constructor(name, description, stack, logo_url, github_url, site_live_url) {
     (this.name = name),
@@ -11,10 +9,10 @@ class Project {
   }
 }
 
-Project.getAll = (result) => {
+Project.getAll = (connection, result) => {
   let query = "SELECT * FROM project";
 
-  sql.query(query, (err, res) => {
+  connection.query(query, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
